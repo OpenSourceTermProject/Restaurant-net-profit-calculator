@@ -10,6 +10,10 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.button import Button
 from kivy.core.text import LabelBase
 
+from kivy.config import Config
+Config.set('modules', 'touchring', '0')
+Config.set('input', 'mouse', 'mouse,disable_multitouch')
+
 # 한글 폰트 등록
 LabelBase.register(name="NanumGothic", fn_regular="NanumGothic-ExtraBold.ttf")
 
@@ -19,23 +23,23 @@ class RestaurantCalculatorApp(App):
         
         # 연 매출액 및 식자재비 입력
         input_layout = GridLayout(cols=3, spacing=10)
-        input_layout.add_widget(Label(text="연 매출액", font_size=20, font_name="NanumGothic"))
-        self.sales_input = TextInput(multiline=False, font_size=20)
+        input_layout.add_widget(Label(text="연 매출액", font_size=15, font_name="NanumGothic"))
+        self.sales_input = TextInput(multiline=False, font_size=15)
         input_layout.add_widget(self.sales_input)
-        input_layout.add_widget(Label(text="원", font_size=20, font_name="NanumGothic"))
+        input_layout.add_widget(Label(text="원", font_size=15, font_name="NanumGothic"))
 
-        input_layout.add_widget(Label(text="식자재비", font_size=20, font_name="NanumGothic"))
-        self.material_cost_input = TextInput(multiline=False, font_size=20)
+        input_layout.add_widget(Label(text="식자재비", font_size=15, font_name="NanumGothic"))
+        self.material_cost_input = TextInput(multiline=False, font_size=15)
         input_layout.add_widget(self.material_cost_input)
-        input_layout.add_widget(Label(text="원", font_size=20, font_name="NanumGothic"))
+        input_layout.add_widget(Label(text="원", font_size=15, font_name="NanumGothic"))
 
         main_layout.add_widget(input_layout)
 
         # 주문 중개처 (체크박스)
         intermediary_layout = GridLayout(cols=3, spacing=20, padding=[0, 20, 0, 0])
-        intermediary_layout.add_widget(Label(text="배달의민족", font_size=20, font_name="NanumGothic"))
-        intermediary_layout.add_widget(Label(text="요기요", font_size=20, font_name="NanumGothic"))
-        intermediary_layout.add_widget(Label(text="쿠팡이츠", font_size=20, font_name="NanumGothic"))
+        intermediary_layout.add_widget(Label(text="배달의민족", font_size=15, font_name="NanumGothic"))
+        intermediary_layout.add_widget(Label(text="요기요", font_size=15, font_name="NanumGothic"))
+        intermediary_layout.add_widget(Label(text="쿠팡이츠", font_size=15, font_name="NanumGothic"))
 
         self.check_baemin = CheckBox()
         self.check_yogiyo = CheckBox()
@@ -45,7 +49,7 @@ class RestaurantCalculatorApp(App):
         intermediary_layout.add_widget(self.check_yogiyo)
         intermediary_layout.add_widget(self.check_coupangeats)
 
-        main_layout.add_widget(Label(text="주문 중개처", font_size=20, halign="center", font_name="NanumGothic"))
+        main_layout.add_widget(Label(text="주문 중개처", font_size=15, halign="center", font_name="NanumGothic"))
         main_layout.add_widget(intermediary_layout)
 
         # 비용 출력 부분
@@ -60,16 +64,16 @@ class RestaurantCalculatorApp(App):
         main_layout.add_widget(output_layout)
         
         # 계산 버튼 추가
-        calculate_button = Button(text="계산하기", font_size=20, on_press=self.calculate_net_profit, font_name="NanumGothic")
+        calculate_button = Button(text="계산하기", font_size=15, on_press=self.calculate_net_profit, font_name="NanumGothic")
         main_layout.add_widget(calculate_button)
 
         return main_layout
     
     def create_output_row(self, label_text, layout):
-        layout.add_widget(Label(text=label_text, font_size=20, font_name="NanumGothic"))
-        output_label = Label(text="0 원", font_size=20, font_name="NanumGothic")
+        layout.add_widget(Label(text=label_text, font_size=15, font_name="NanumGothic"))
+        output_label = Label(text="0", font_size=15, font_name="NanumGothic")
         layout.add_widget(output_label)
-        layout.add_widget(Label(text="원", font_size=20, font_name="NanumGothic"))
+        layout.add_widget(Label(text="원", font_size=15, font_name="NanumGothic"))
         return output_label
 
     def calculate_net_profit(self, instance):
@@ -91,12 +95,12 @@ class RestaurantCalculatorApp(App):
             net_profit = sales - (material_cost + insurance + tax + intermediary_fee + payment_processing_fee + utilities)
 
             # 결과 출력
-            self.insurance_label.text = f"{insurance:,.0f} 원"
-            self.tax_label.text = f"{tax:,.0f} 원"
-            self.intermediary_fee_label.text = f"{intermediary_fee:,.0f} 원"
-            self.payment_processing_fee_label.text = f"{payment_processing_fee:,.0f} 원"
-            self.utilities_label.text = f"{utilities:,.0f} 원"
-            self.expected_net_profit_label.text = f"{net_profit:,.0f} 원"
+            self.insurance_label.text = f"{insurance:,.0f}"
+            self.tax_label.text = f"{tax:,.0f}"
+            self.intermediary_fee_label.text = f"{intermediary_fee:,.0f}"
+            self.payment_processing_fee_label.text = f"{payment_processing_fee:,.0f}"
+            self.utilities_label.text = f"{utilities:,.0f}"
+            self.expected_net_profit_label.text = f"{net_profit:,.0f}"
         except ValueError:
             self.expected_net_profit_label.text = "입력 오류"
 
