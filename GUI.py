@@ -1,6 +1,8 @@
 # 파이썬을 3.8버전 혹은 3.9버전으로 downgrade 시켜줘야 
 # KIVY가 정상적으로 설치 및 실행이 됩니다.
 
+from Tax import Tax
+from Insurance import Insurance
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
@@ -163,12 +165,12 @@ class RestaurantCalculatorApp(App):
             # 공과금 계산
             utilities = sales * 0.005  # 예: 매출의 0.5%를 공과금으로 가정
             # 각 항목의 비용을 간단히 계산하는 예시 (사용자 정의로 변경 가능)
-            insurance = sales * 0.01  # 예: 매출의 1%를 보험료로 가정
-            tax = sales * 0.1         # 예: 매출의 10%를 세금으로 가정
             intermediary_fee = 0.05 * sales if self.check_baemin.active else 0
             intermediary_fee += 0.04 * sales if self.check_yogiyo.active else 0
             intermediary_fee += 0.03 * sales if self.check_coupangeats.active else 0
             utilities = sales * 0.005               # 예: 매출의 0.5%를 공과금으로 가정
+            insurance = sales * 0.01  #예: Insurance(sales, 필요경비(material_cost + utilities + intermediary_fee + a),고용보험,산재보험,의무보험 총 5개의 True,False값)
+            tax = sales * 0.1         #예: Tax(sales, 모든경비(보험도포함))
 
             # 순이익 계산
             net_profit = sales - (material_cost + insurance + tax + intermediary_fee + payment_processing_fee + utilities)
