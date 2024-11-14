@@ -22,8 +22,69 @@ Config.set('input', 'mouse', 'mouse,disable_multitouch')
 # 한글 폰트 등록
 LabelBase.register(name="NanumGothic", fn_regular="NanumGothic-ExtraBold.ttf")
 
+class InsuranceSettingsPopup(Popup):
+    def __init__(self, parent_app, **kwargs):
+        super().__init__(**kwargs)
+        self.title = "Insurance Settings"
+        self.size_hint = (0.5, 0.8)
+        self.parent_app = parent_app
+
+        layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
+
+        #4대보험 가입여부 체크박스
+        MajorInsurance_layout = GridLayout(cols=2, spacing=20)
+        MajorInsurance_layout.add_widget(Label(text="고용보험", font_size=15, font_name="NanumGothic"))
+        self.check_employment = CheckBox()
+        MajorInsurance_layout.add_widget(self.check_employment)
+
+
+        MajorInsurance_layout.add_widget(Label(text="산재보험", font_size=15, font_name="NanumGothic"))
+        self.check_industrial = CheckBox()
+        MajorInsurance_layout.add_widget(self.check_industrial)
+
+        layout.add_widget(Label(text="4대보험 가입 여부(가입시 체크)", font_size=15, font_name="NanumGothic"))
+        layout.add_widget(MajorInsurance_layout)
+
+        #의무보험 가입여부 체크박스
+        c_insurance_layout = GridLayout(cols=2, spacing=20)
+        c_insurance_layout.add_widget(Label(text="다중이용업소화재보험", font_size=15, font_name="NanumGothic"))
+        self.check_multi = CheckBox()
+        c_insurance_layout.add_widget(self.check_multi)
+
+
+        c_insurance_layout.add_widget(Label(text="재난보험", font_size=15, font_name="NanumGothic"))
+        self.check_disaster = CheckBox()
+        c_insurance_layout.add_widget(self.check_disaster)
+
+        c_insurance_layout.add_widget(Label(text="가스사고보험", font_size=15, font_name="NanumGothic"))
+        self.check_gas = CheckBox()
+        c_insurance_layout.add_widget(self.check_gas)
+
+        layout.add_widget(Label(text="의무보험 가입 여부(가입시 체크)", font_size=15, halign="left", font_name="NanumGothic"))
+        layout.add_widget(c_insurance_layout)
+
+        #확인 버튼 추가
+        confirm_button = Button(text="확인", font_size=15, on_press=self.confirm_insurance, font_name="NanumGothic")
+        layout.add_widget(confirm_button)
+
+        self.add_widget(layout)
+    
+    def confirm_insurance(self, instance):
+        # 팝업을 닫고 보험 가입 여부를 저장
+        self.parent_app.insurance_selections = {
+            "employment": self.check_employment.active,
+            "industrial": self.check_industrial.active,
+            "multi": self.check_multi.active,
+            "disaster": self.check_disaster.active,
+            "gas": self.check_gas.active,
+        }
+        self.dismiss()
+
+
 class RestaurantCalculatorApp(App):
     def build(self):
+        self.insurance_selections = {}  # 보험 가입 여부 저장할 딕셔너리
+
         main_layout = BoxLayout(orientation='vertical', padding=20, spacing=20)
         
         # 연 매출액 및 식자재비 입력
@@ -93,6 +154,10 @@ class RestaurantCalculatorApp(App):
         self.expected_net_profit_label = self.create_output_row("예상 순이익", output_layout)
 
         main_layout.add_widget(output_layout)
+
+        # 보험료 세부 설정 버튼 추가
+        insurance_settings_button = Button(text="보험료 세부 설정", font_size=15, on_press=self.open_insurance_settings, font_name="NanumGothic")
+        main_layout.add_widget(insurance_settings_button)
         
         # 계산 버튼 추가
         calculate_button = Button(text="계산하기", font_size=15, on_press=self.calculate_net_profit, font_name="NanumGothic")
@@ -152,6 +217,10 @@ class RestaurantCalculatorApp(App):
             payment_processing_fee += rates['nice'] * sales
         return payment_processing_fee
 
+    def open_insurance_settings(self, instance):
+        popup = InsuranceSettingsPopup(self)
+        popup.open()
+
     def calculate_net_profit(self, instance):
         # 여기서 입력값을 가져와서 순이익을 계산할 수 있습니다.
         try:
@@ -169,7 +238,12 @@ class RestaurantCalculatorApp(App):
             intermediary_fee += 0.04 * sales if self.check_yogiyo.active else 0
             intermediary_fee += 0.03 * sales if self.check_coupangeats.active else 0
             utilities = sales * 0.005               # 예: 매출의 0.5%를 공과금으로 가정
-            insurance = sales * 0.01  #예: Insurance(sales, 필요경비(material_cost + utilities + intermediary_fee + a),고용보험,산재보험,의무보험 총 5개의 True,False값)
+            insurance = Insurance(sales, material_cost, 
+                                  self.insurance_selections.get("employment", False), 
+                                  self.insurance_selections.get("industrial", False), 
+                                  self.insurance_selections.get("multi", False), 
+                                  self.insurance_selections.get("disaster", False), 
+                                  self.insurance_selections.get("gas", False))      ############# 두번째 값 다 완성후 수정필요 필요경비 싹다 넣어야함 식자재+a
             tax = sales * 0.1         #예: Tax(sales, 모든경비(보험도포함))
 
             # 순이익 계산
