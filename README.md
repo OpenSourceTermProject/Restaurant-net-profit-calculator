@@ -5,6 +5,15 @@
 - 해당 프로젝트의 모든 기능은 본인의 컴퓨터와 무관하게 가상 환경 위에서 동작합니다.
 - 설치된 라이브러리들은 kivy_venv/Lib에 파일이 있습니다.
 
+## 가상환경 설치
+- cmd 혹은 터미널에서 프로젝트 루트 폴더로 이동 후 다음을 순서대로 실행
+1. python -m pip install --upgrade pip setuptools virtualenv
+2. python -m venv kivy_venv
+3. kivy_venv\Scripts\activate
+4. python -m pip install "kivy[base]" kivy_examples
+5. python kivy_venv\share\kivy-examples\demo\showcase\main.py로 데모 실행 확인
+6. python main.py로 프로젝트 실행 확인
+
 ## 프로젝트 불러오기
 - 사용하는 IDE 해당 프로젝트의 루트 폴더를 열어서 프로젝트 전체를 불러오시면 됩니다.
 
