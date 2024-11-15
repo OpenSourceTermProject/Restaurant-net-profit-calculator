@@ -4,6 +4,7 @@
 
 # 클래스 파일 Import
 # ---- 보험료 / 세금 ----
+from src.Insurance import Insurance
 from src.Insurance import InsuranceSettingsPopup
 from src.Tax import Tax
 
@@ -40,6 +41,7 @@ class RootWidget(Widget):
         self.costInput = CostInput(self.main_layout, self.input_layout) # 입력
         self.insuranceSettingsPopUp = InsuranceSettingsPopup(self.main_layout)  # 보험 설정 팝업
         self.fee = Fee(self.main_layout)  # 수수료
+        self.insurance = Insurance(self.main_layout)
         self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee) # 출력
 
 
