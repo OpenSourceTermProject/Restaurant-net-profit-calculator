@@ -10,15 +10,14 @@ from kivy.uix.button import Button
 
 # 결과 출력
 class ResultOutput(Widget):
-    def __init__(self, main_layout, input_layout, costInput, fee, **kwargs):
+    def __init__(self, main_layout, input_layout, costInput, fee, insurance, **kwargs):  # 보험 객체 추가
         super(ResultOutput, self).__init__(**kwargs)
         self.main_layout = main_layout
         self.input_layout = input_layout
         self.costInput = costInput
         self.fee = fee
-
-        self.insurance_selections = {}  # 보험 가입 여부 저장할 딕셔너리
-
+        self.insurance = insurance  # 보험 객체 저장
+        
         # 비용 출력 부분
         self.output_layout = GridLayout(cols=3, spacing=10)
         self.insurance_label = self.create_output_row("보험료", self.output_layout)
@@ -59,13 +58,17 @@ class ResultOutput(Widget):
             intermediary_fee += 0.04 * sales if self.fee.check_yogiyo.active else 0
             intermediary_fee += 0.03 * sales if self.fee.check_coupangeats.active else 0
             utilities = sales * 0.005  # 예: 매출의 0.5%를 공과금으로 가정
-            insurance = Insurance.calc_insurance(sales, material_cost,
-                                                self.insurance_selections.get("employment", False),
-                                                self.insurance_selections.get("industrial", False),
-                                                self.insurance_selections.get("multi", False),
-                                                self.insurance_selections.get("disaster", False),
-                                                self.insurance_selections.get("gas",
-                                                                              False))  ############# 두번째 값 다 완성후 수정필요 필요경비 싹다 넣어야함 식자재+a
+            insurance_states = self.insurance.insurance_selections  # 상태 가져오기
+            insurance = Insurance.calc_insurance(
+                sales,
+                material_cost,
+                insurance_states.get("employment", False),
+                insurance_states.get("industrial", False),
+                insurance_states.get("multi", False),
+                insurance_states.get("disaster", False),
+                insurance_states.get("gas", False),
+            ) ############# 두번째 값 다 완성후 수정필요 필요경비 싹다 넣어야함 식자재+a
+            
             tax = sales * 0.1  # 예: Tax(sales, 모든경비(보험도포함))
 
             # 순이익 계산

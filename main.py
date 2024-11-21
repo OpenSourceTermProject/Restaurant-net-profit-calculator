@@ -39,10 +39,9 @@ class RootWidget(Widget):
 
         # 위젯 객체 생성
         self.costInput = CostInput(self.main_layout, self.input_layout) # 입력
-        self.insuranceSettingsPopUp = InsuranceSettingsPopup(self.main_layout)  # 보험 설정 팝업
+        self.insurance = Insurance(self.main_layout)  # 보험 객체 생성
         self.fee = Fee(self.main_layout)  # 수수료
-        self.insurance = Insurance(self.main_layout)
-        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee) # 출력
+        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee, self.insurance)  # 보험 객체 전달
 
 
 # 이 안에 직접 기능 구현하지 말고 각각 클래스 파일에서 구현한 후, rootWidget에 객체 생성해서 하나씩 붙여주세요.
