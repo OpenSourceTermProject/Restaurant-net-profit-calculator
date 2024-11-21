@@ -2,6 +2,7 @@
 # ---- 보험료 / 세금 ----
 from src.Fee import Fee  # Fee 클래스 Import
 from src.Insurance import Insurance
+from src.Tax import Tax  # Tax 클래스 Import
 
 from kivy.uix.widget import Widget
 from kivy.uix.label import Label
@@ -17,6 +18,7 @@ class ResultOutput(Widget):
         self.costInput = costInput
         self.fee = fee
         self.insurance = insurance
+        self.tax = Tax()  # Tax 객체 생성
 
         # 비용 출력 부분
         self.output_layout = GridLayout(cols=3, spacing=10)
@@ -69,7 +71,7 @@ class ResultOutput(Widget):
                 insurance_states.get("gas", False),
             )
             
-            tax = sales * 0.1  # 예: Tax(sales, 모든경비(보험도포함))
+            tax = self.tax.CalcTax(sales, material_cost + insurance + payment_processing_fee + intermediary_fee)
 
             # 순이익 계산
             net_profit = sales - (
