@@ -1,6 +1,5 @@
 from kivy.uix.widget import Widget
 
-
 # 세금
 class Tax(Widget):
     def __init__(self, **kwargs):

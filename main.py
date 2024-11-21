@@ -43,10 +43,9 @@ class RootWidget(Widget):
 
         # 위젯 객체 생성
         self.costInput = CostInput(self.main_layout, self.input_layout) # 입력
-        self.insuranceSettingsPopUp = InsuranceSettingsPopup(self.main_layout)  # 보험 설정 팝업
+        self.insurance = Insurance(self.main_layout)  # 보험 객체 생성
         self.fee = Fee(self.main_layout)  # 수수료
-        self.insurance = Insurance(self.main_layout)
-        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee) # 출력
+        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee, self.insurance)  # 보험 객체 전달
 
         self.electricitySettingsPopup = ElectricitySettingsPopup(self.main_layout)
         self.gasSettingsPopup = GasSettingsPopup(self.main_layout)

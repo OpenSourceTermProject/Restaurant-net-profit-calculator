@@ -11,15 +11,24 @@ from kivy.uix.popup import Popup
 class Insurance(Widget):
     def __init__(self, main_layout, **kwargs):
         super(Insurance, self).__init__(**kwargs)
-
         self.main_layout = main_layout
 
-        # 보험료 세부 설정 버튼 추가
-        insurance_settings_button = Button(text="보험료 세부 설정", font_size=15, on_press=self.open_insurance_settings,
-                                           font_name="NanumGothic")
-        self.main_layout.add_widget(insurance_settings_button)
+        # 기본 보험 설정값
+        self.insurance_selections = {
+            "employment": False,
+            "industrial": False,
+            "multi": False,
+            "disaster": False,
+            "gas": False,
+        }
 
-    # 보험 표시 함수
+        # 보험료 세부 설정 버튼 추가
+        insurance_settings_button = Button(
+            text="보험료 세부 설정", font_size=15, on_press=self.open_insurance_settings, font_name="NanumGothic",
+            size_hint = (None, None), width=200, height=50
+        )
+        self.main_layout.add_widget(insurance_settings_button)
+        
     def open_insurance_settings(self, instance):
         popup = InsuranceSettingsPopup(self)
         popup.open()
@@ -77,42 +86,50 @@ class InsuranceSettingsPopup(Popup):
 
         # 4대보험 가입여부 체크박스
         self.MajorInsurance_layout = GridLayout(cols=2, spacing=20)
-        self.MajorInsurance_layout.add_widget(Label(text="고용보험", font_size=15, font_name="NanumGothic"))
+        self.MajorInsurance_layout.add_widget(Label(text="고용보험", font_size=15, 
+                                                    font_name="NanumGothic"))
         self.check_employment = CheckBox()
         self.MajorInsurance_layout.add_widget(self.check_employment)
 
-        self.MajorInsurance_layout.add_widget(Label(text="산재보험", font_size=15, font_name="NanumGothic"))
+        self.MajorInsurance_layout.add_widget(Label(text="산재보험", font_size=15, 
+                                                    font_name="NanumGothic"))
         self.check_industrial = CheckBox()
         self.MajorInsurance_layout.add_widget(self.check_industrial)
 
-        self.layout.add_widget(Label(text="4대보험 가입 여부(가입시 체크)", font_size=15, font_name="NanumGothic"))
+        self.layout.add_widget(Label(text="4대보험 가입 여부(가입시 체크)", font_size=15, 
+                                     font_name="NanumGothic"))
         self.layout.add_widget(self.MajorInsurance_layout)
 
         # 의무보험 가입여부 체크박스
         c_insurance_layout = GridLayout(cols=2, spacing=20)
-        c_insurance_layout.add_widget(Label(text="다중이용업소화재보험", font_size=15, font_name="NanumGothic"))
+        c_insurance_layout.add_widget(Label(text="다중이용업소화재보험", font_size=15, 
+                                            font_name="NanumGothic"))
         self.check_multi = CheckBox()
         c_insurance_layout.add_widget(self.check_multi)
 
-        c_insurance_layout.add_widget(Label(text="재난보험", font_size=15, font_name="NanumGothic"))
+        c_insurance_layout.add_widget(Label(text="재난보험", font_size=15, 
+                                            font_name="NanumGothic"))
         self.check_disaster = CheckBox()
         c_insurance_layout.add_widget(self.check_disaster)
 
-        c_insurance_layout.add_widget(Label(text="가스사고보험", font_size=15, font_name="NanumGothic"))
+        c_insurance_layout.add_widget(Label(text="가스사고보험", font_size=15, 
+                                            font_name="NanumGothic"))
         self.check_gas = CheckBox()
         c_insurance_layout.add_widget(self.check_gas)
 
-        self.layout.add_widget(Label(text="의무보험 가입 여부(가입시 체크)", font_size=15, halign="left", font_name="NanumGothic"))
+        self.layout.add_widget(Label(text="의무보험 가입 여부(가입시 체크)", font_size=15, 
+                                     halign="left", font_name="NanumGothic"))
         self.layout.add_widget(c_insurance_layout)
 
         # 확인 버튼 추가
-        confirm_button = Button(text="확인", font_size=15, on_press=self.confirm_insurance, font_name="NanumGothic")
+        confirm_button = Button(text="확인", font_size=15, on_press=self.confirm_insurance, 
+                                font_name="NanumGothic")
         self.layout.add_widget(confirm_button)
 
         self.add_widget(self.layout)
 
     def confirm_insurance(self, instance):
-        # 팝업을 닫고 보험 가입 여부를 저장
+
         self.parent_app.insurance_selections = {
             "employment": self.check_employment.active,
             "industrial": self.check_industrial.active,
@@ -120,4 +137,5 @@ class InsuranceSettingsPopup(Popup):
             "disaster": self.check_disaster.active,
             "gas": self.check_gas.active,
         }
+        print("업데이트된 상태:", self.parent_app.insurance_selections)
         self.dismiss()
