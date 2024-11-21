@@ -24,7 +24,8 @@ class Insurance(Widget):
 
         # 보험료 세부 설정 버튼 추가
         insurance_settings_button = Button(
-            text="보험료 세부 설정", font_size=15, on_press=self.open_insurance_settings, font_name="NanumGothic"
+            text="보험료 세부 설정", font_size=15, on_press=self.open_insurance_settings, font_name="NanumGothic",
+            size_hint = (None, None), width=200, height=50
         )
         self.main_layout.add_widget(insurance_settings_button)
         
