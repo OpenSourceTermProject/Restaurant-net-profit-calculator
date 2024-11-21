@@ -61,6 +61,7 @@ class ElectricitySettingsPopup(Popup):
         self.layout.add_widget(confirm_button)
 
         self.add_widget(self.layout)
+
     
     def confirm_electircity(self, instance):
         # 값을 가져와 계산
