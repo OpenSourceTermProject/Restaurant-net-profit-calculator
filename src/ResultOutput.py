@@ -49,23 +49,31 @@ class ResultOutput(Widget):
             material_cost = float(self.costInput.material_cost_input.text)
             rates = self.fee.get_commission_rates(sales)
 
+            # 가스 요금
+            gas_cost = self.main_layout.gas_settings_result
+
+            # 전기 요금
+            electricity_cost = self.main_layout.electric_settings_result
+
+            # 수도 요금
+            water_cost = self.main_layout.water_settings_result 
+
             # 결제 수수료 계산
             payment_processing_fee = self.fee.calculate_payment_processing_fee(sales, rates)
 
-            # 공과금 계산
-            utilities = sales * 0.005  # 예: 매출의 0.5%를 공과금으로 가정
             # 각 항목의 비용을 간단히 계산하는 예시 (사용자 정의로 변경 가능)
             intermediary_fee = 0.05 * sales if self.fee.check_baemin.active else 0
             intermediary_fee += 0.04 * sales if self.fee.check_yogiyo.active else 0
             intermediary_fee += 0.03 * sales if self.fee.check_coupangeats.active else 0
-            utilities = sales * 0.005  # 예: 매출의 0.5%를 공과금으로 가정
+            utilities = gas_cost + electricity_cost + water_cost
             insurance = Insurance.calc_insurance(sales, material_cost,
                                                 self.insurance_selections.get("employment", False),
                                                 self.insurance_selections.get("industrial", False),
                                                 self.insurance_selections.get("multi", False),
                                                 self.insurance_selections.get("disaster", False),
                                                 self.insurance_selections.get("gas",
-                                                                              False))  ############# 두번째 값 다 완성후 수정필요 필요경비 싹다 넣어야함 식자재+a
+            
+                                                                          False))  ############# 두번째 값 다 완성후 수정필요 필요경비 싹다 넣어야함 식자재+a
             tax = sales * 0.1  # 예: Tax(sales, 모든경비(보험도포함))
 
             # 순이익 계산
