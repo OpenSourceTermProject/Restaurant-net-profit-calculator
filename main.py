@@ -1,7 +1,6 @@
 # main.py는 프로그램 전반적으로 사용되는 것들만 정의합니다.
 # 세부적인 기능은 src 폴더 내에 새로운 클래스 파일에 구현 해주세요.
 
-
 # 클래스 파일 Import
 # ---- 보험료 / 세금 ----
 from src.Insurance import Insurance
@@ -10,9 +9,7 @@ from src.Tax import Tax
 
 # ---- 공과금 / 수수료 ----
 from src.Fee import Fee
-from src.ElectricitySettingsPopup import ElectricitySettingsPopup
-from src.GasSettingsPopup import GasSettingsPopup
-from src.WaterSettingsPopup import WaterSettingsPopup
+from src.UtilityButtons import UtilityButtons
 
 # ---- 비용 입력 ----
 from src.CostInput import CostInput
@@ -46,44 +43,8 @@ class RootWidget(Widget):
         self.insuranceSettingsPopUp = InsuranceSettingsPopup(self.main_layout)  # 보험 설정 팝업
         self.fee = Fee(self.main_layout)  # 수수료
         self.insurance = Insurance(self.main_layout)
-        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee) # 출력
-
-        self.electricitySettingsPopup = ElectricitySettingsPopup(self.main_layout)
-        self.gasSettingsPopup = GasSettingsPopup(self.main_layout)
-        self.waterSettingsPopup = WaterSettingsPopup(self.main_layout)
-
-        # 공과금 설정 버튼들을 담을 BoxLayout (가로로 배치)
-        utility_button_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=10)
-
-        # 전기 설정 버튼
-        electricity_button = Button(
-            text="전기 요금 설정", font_size=15, on_press=self.open_electricity_popup, font_name="NanumGothic"
-        )
-        utility_button_layout.add_widget(electricity_button)
-
-        # 가스 설정 버튼
-        gas_button = Button(
-            text="가스 요금 설정", font_size=15, on_press=self.open_gas_popup, font_name="NanumGothic"
-        )
-        utility_button_layout.add_widget(gas_button)
-
-        # 수도 설정 버튼
-        water_button = Button(
-            text="수도 요금 설정", font_size=15, on_press=self.open_water_popup, font_name="NanumGothic"
-        )
-        utility_button_layout.add_widget(water_button)
-
-        # 공과금 버튼 레이아웃을 main_layout에 추가
-        self.main_layout.add_widget(utility_button_layout)
-
-    def open_electricity_popup(self, instance):
-        self.electricitySettingsPopup.open()
-
-    def open_gas_popup(self, instance):
-        self.gasSettingsPopup.open()
-
-    def open_water_popup(self, instance):
-        self.waterSettingsPopup.open()
+        self.utilityButtons = UtilityButtons(self.main_layout) # 공과금 버튼
+        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee, self.insurance) # 출력
 
 
 # 이 안에 직접 기능 구현하지 말고 각각 클래스 파일에서 구현한 후, rootWidget에 객체 생성해서 하나씩 붙여주세요.
