@@ -11,6 +11,7 @@ class WaterSettingsPopup(Popup):
         self.title = "WaterSetting"
         self.size_hint = (0.5, 0.8)
         self.main_layout = main_layout
+        self.water_settings_result = 0
         
         self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
@@ -51,8 +52,8 @@ class WaterSettingsPopup(Popup):
         # 요금 계산
         total_cost = self.calculate_total_water_sewer_bill(water_usage, sewer_usage, diameter)
 
-        # 결과를 main_layout에 저장
-        self.main_layout.water_settings_result = total_cost
+        # 결과 저장
+        self.water_settings_result = total_cost
 
         # 팝업 닫기
         self.dismiss()
