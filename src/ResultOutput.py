@@ -8,6 +8,7 @@ from kivy.uix.widget import Widget
 from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
+from kivy.uix.boxlayout import BoxLayout  # BoxLayout import 추가
 
 # 결과 출력
 class ResultOutput(Widget):
@@ -33,9 +34,25 @@ class ResultOutput(Widget):
         self.main_layout.add_widget(self.output_layout)
 
         # 계산 버튼 추가
-        calculate_button = Button(text="계산하기", font_size=15, on_press=self.calculate_net_profit,
-                                  font_name="NanumGothic")
-        self.main_layout.add_widget(calculate_button)
+        calculate_button = Button(
+            text="계산",
+            font_size= 25,  # 글씨 크기 유지
+            size_hint=(0.4, None),  # 가로 길이 줄임 (0.3으로 설정)
+            height= 90,
+            font_name="NanumGothic",
+            on_press=self.calculate_net_profit
+        )
+
+        # 버튼을 가운데 배치하기 위해 BoxLayout 추가
+        calculate_button_layout = BoxLayout(
+            orientation='horizontal',
+            size_hint=(1, None),  # 전체 레이아웃 크기
+            height = 90
+        )
+        calculate_button_layout.add_widget(calculate_button)
+
+        # 메인 레이아웃에 추가
+        self.main_layout.add_widget(calculate_button_layout)
 
     def create_output_row(self, label_text, layout):
         layout.add_widget(Label(text=label_text, font_size=15, font_name="NanumGothic"))
