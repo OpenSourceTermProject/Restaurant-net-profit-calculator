@@ -11,7 +11,7 @@ from kivy.uix.button import Button
 
 # 결과 출력
 class ResultOutput(Widget):
-    def __init__(self, main_layout, input_layout, costInput, fee, insurance, **kwargs):
+    def __init__(self, main_layout, input_layout, costInput, fee, insurance, utilityButtons, **kwargs):
         super(ResultOutput, self).__init__(**kwargs)
         self.main_layout = main_layout
         self.input_layout = input_layout
@@ -19,6 +19,7 @@ class ResultOutput(Widget):
         self.fee = fee
         self.insurance = insurance
         self.tax = Tax()  # Tax 객체 생성
+        self.utilityButtons = utilityButtons
 
         # 비용 출력 부분
         self.output_layout = GridLayout(cols=3, spacing=10)
@@ -50,13 +51,13 @@ class ResultOutput(Widget):
             rates = self.fee.get_commission_rates(sales)
 
             # 가스 요금
-            gas_cost = self.main_layout.gas_settings_result
+            gas_cost = self.utilityButtons.gasSettingsPopup.gas_settings_result
 
             # 전기 요금
-            electricity_cost = self.main_layout.electric_settings_result
+            electricity_cost = self.utilityButtons.electricitySettingsPopup.electric_settings_result
 
             # 수도 요금
-            water_cost = self.main_layout.water_settings_result 
+            water_cost = self.utilityButtons.waterSettingsPopup.water_settings_result 
 
             # 결제 수수료 계산
             payment_processing_fee = self.fee.calculate_payment_processing_fee(sales, rates)

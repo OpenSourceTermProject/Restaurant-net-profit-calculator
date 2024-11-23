@@ -11,6 +11,9 @@ class Fee(Widget):
         super(Fee, self).__init__(**kwargs)
 
         self.main_layout = main_layout
+        
+        # 공과금 설정 버튼들을 담을 BoxLayout (가로로 배치)
+        self.fee_button_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=10)
 
         # 결제 대행 체크박스 정의
         self.check_hecto = CheckBox()
@@ -25,27 +28,31 @@ class Fee(Widget):
         self.check_yogiyo = CheckBox()
         self.check_coupangeats = CheckBox()
 
+        # 팝업 객체 생성
+        self.paymentProcessingPopup = PaymentProcessingPopup(self)
+        self.orderIntermediaryPopup = OrderIntermediaryPopup(self)
+
         # 결제 대행 버튼
         payment_processing_button = Button(
             text="결제 대행 수수료 설정", font_size=15, on_press=self.open_payment_processing_popup, font_name="NanumGothic",
             size_hint=(None, None), width=200, height=50
         )
-        self.main_layout.add_widget(payment_processing_button)
+        self.fee_button_layout.add_widget(payment_processing_button)
 
         # 주문 중개 버튼
         order_intermediary_button = Button(
             text="주문 중개 수수료 설정", font_size=15, on_press=self.open_order_intermediary_popup, font_name="NanumGothic",
             size_hint=(None, None), width=200, height=50
         )
-        self.main_layout.add_widget(order_intermediary_button)
+        self.fee_button_layout.add_widget(order_intermediary_button)
+
+        self.main_layout.add_widget(self.fee_button_layout)
 
     def open_payment_processing_popup(self, instance):
-        popup = PaymentProcessingPopup(self)
-        popup.open()
+        self.paymentProcessingPopup.open()
 
     def open_order_intermediary_popup(self, instance):
-        popup = OrderIntermediaryPopup(self)
-        popup.open()
+        self.orderIntermediaryPopup.open()
 
     # 매출 구간에 따른 수수료율을 반환하는 함수
     def get_commission_rates(self, sales):

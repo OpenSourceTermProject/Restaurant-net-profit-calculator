@@ -11,6 +11,7 @@ class GasSettingsPopup(Popup):
         self.title = "GasSetting"
         self.size_hint = (0.5, 0.8)
         self.main_layout = main_layout
+        self.gas_settings_result = 0 # 계산 결과
         
         self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
@@ -57,7 +58,7 @@ class GasSettingsPopup(Popup):
         total_cost = ((usage * correction_factor) * average_energy * 23.105 + instrument_cost) * 1.1
 
         # 계산 결과 저장
-        self.main_layout.gas_settings_result = total_cost
+        self.gas_settings_result = total_cost
 
         # 팝업 닫기
         self.dismiss()

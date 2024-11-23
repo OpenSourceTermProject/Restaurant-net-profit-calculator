@@ -12,6 +12,7 @@ class ElectricitySettingsPopup(Popup):
         self.title = "ElectricitySetting"
         self.size_hint = (0.5, 0.9)
         self.main_layout = main_layout
+        self.electric_settings_result = 0
 
         self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
@@ -77,7 +78,7 @@ class ElectricitySettingsPopup(Popup):
         total_cost = (cost1 + cost2) + (cost3 + cost4 + cost5) * (cost6 + cost7)
 
         # 계산 결과 저장
-        self.main_layout.electric_settings_result = total_cost
+        self.electric_settings_result = total_cost
 
         # 팝업 닫기
         self.dismiss()

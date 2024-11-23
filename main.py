@@ -44,7 +44,7 @@ class RootWidget(Widget):
         self.fee = Fee(self.main_layout)  # 수수료
         self.insurance = Insurance(self.main_layout)
         self.utilityButtons = UtilityButtons(self.main_layout) # 공과금 버튼
-        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee, self.insurance) # 출력
+        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee, self.insurance, self.utilityButtons) # 출력
 
 
 # 이 안에 직접 기능 구현하지 말고 각각 클래스 파일에서 구현한 후, rootWidget에 객체 생성해서 하나씩 붙여주세요.
