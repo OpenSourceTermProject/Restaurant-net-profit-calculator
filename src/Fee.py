@@ -5,6 +5,7 @@ from kivy.uix.checkbox import CheckBox
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
+from kivy.uix.textinput import TextInput
 
 class Fee(Widget):
     def __init__(self, main_layout, **kwargs):
@@ -105,19 +106,6 @@ class Fee(Widget):
             payment_processing_fee += rates['nice'] * sales
         return payment_processing_fee
 
-
-    # 주문 중개 수수료 계산 함수
-    def calculate_order_intermediary_fee(self, sales, rates):
-        order_intermediary_fee = 0
-        if self.check_baemin.active:
-            order_intermediary_fee += rates['baemin'] * sales
-        if self.check_yogiyo.active:
-            order_intermediary_fee += rates['yogiyo'] * sales
-        if self.check_coupangeats.active:
-            order_intermediary_fee += rates['coupangeats'] * sales
-        return order_intermediary_fee
-
-
 class PaymentProcessingPopup(Popup):
     def __init__(self, parent_app, **kwargs):
         super().__init__(**kwargs)
@@ -183,28 +171,53 @@ class PaymentProcessingPopup(Popup):
 
 
 class OrderIntermediaryPopup(Popup):
+    OrderIntermediary_result = 0
+    
     def __init__(self, parent_app, **kwargs):
         super().__init__(**kwargs)
         self.title = "주문 중개 수수료 설정"
-        self.size_hint = (0.5, 0.8)
+        self.size_hint = (0.5, 1.0)
         self.parent_app = parent_app
         self.title_font = "NanumGothic"
 
         self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 
-        # 주문 중개 수수료 설정 체크박스
-        intermediary_layout = GridLayout(cols=3, spacing=20, padding=[0, 20, 0, 0])
-        intermediary_layout.add_widget(Label(text="배달의민족", font_size=15, font_name="NanumGothic"))
-        intermediary_layout.add_widget(Label(text="요기요", font_size=15, font_name="NanumGothic"))
-        intermediary_layout.add_widget(Label(text="쿠팡이츠", font_size=15, font_name="NanumGothic"))
+        self.OrderIntermediary_layout = GridLayout(cols=2, spacing=20)
 
-        # 체크박스 초기화
-        intermediary_layout.add_widget(self.parent_app.check_baemin)
-        intermediary_layout.add_widget(self.parent_app.check_yogiyo)
-        intermediary_layout.add_widget(self.parent_app.check_coupangeats)
+        self.OrderIntermediary_layout.add_widget(Label(text="배달의 민족 - 배민1 배달 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.baemin1 = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
+        self.OrderIntermediary_layout.add_widget(self.baemin1)
+
+        self.OrderIntermediary_layout.add_widget(Label(text="배달의 민족 - 배민1 배달 건수", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.baemin1_c = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
+        self.OrderIntermediary_layout.add_widget(self.baemin1_c)
+
+        self.OrderIntermediary_layout.add_widget(Label(text="배달의 민족 - 가게 배달 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.baemin_d = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
+        self.OrderIntermediary_layout.add_widget(self.baemin_d)
+
+        self.OrderIntermediary_layout.add_widget(Label(text="배달의 민족 - 포장 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.baemin_p = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
+        self.OrderIntermediary_layout.add_widget(self.baemin_p)
+
+        self.OrderIntermediary_layout.add_widget(Label(text="요기요 - 베이직 가게배달/요기배달/포장 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.yogiyo_basic = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
+        self.OrderIntermediary_layout.add_widget(self.yogiyo_basic)
+
+        self.OrderIntermediary_layout.add_widget(Label(text="요기요 - 라이트 가게배달/요기배달 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.yogiyo_light_d = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
+        self.OrderIntermediary_layout.add_widget(self.yogiyo_light_d)
+
+        self.OrderIntermediary_layout.add_widget(Label(text="요기요 - 라이트 포장 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.yogiyo_light_p = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
+        self.OrderIntermediary_layout.add_widget(self.yogiyo_light_p)
+
+        self.OrderIntermediary_layout.add_widget(Label(text="쿠팡이츠 - 배달 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.coupang = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
+        self.OrderIntermediary_layout.add_widget(self.coupang)
 
         self.layout.add_widget(Label(text="주문 중개처", font_size=15, halign="center", font_name="NanumGothic"))
-        self.layout.add_widget(intermediary_layout)
+        self.layout.add_widget(self.OrderIntermediary_layout)
 
         # 확인 버튼
         confirm_button = Button(
@@ -214,6 +227,26 @@ class OrderIntermediaryPopup(Popup):
         self.layout.add_widget(confirm_button)
 
         self.add_widget(self.layout)
+
+        self.OrderIntermediary_result = 0
+
+    def calculate_OrderIntermediary(self, instance):
+        # 값을 가져와 계산
+        baemin1 = float(self.baemin1.text) if self.baemin1.text else 0
+        baemin1_c = float(self.baemin1_c.text) if self.baemin1_c.text else 0
+        baemin_d = float(self.baemin_d.text) if self.baemin_d.text else 0
+        baemin_p = float(self.baemin_p.text) if self.baemin_p.text else 0
+        yogiyo_basic = float(self.yogiyo_basic.text) if self.yogiyo_basic.text else 0
+        yogiyo_light_d = float(self.yogiyo_light_d.text) if self.yogiyo_light_d.text else 0
+        yogiyo_light_p = float(self.yogiyo_light_p.text) if self.yogiyo_light_p.text else 0
+        coupang = float(self.coupang.text) if self.coupang.text else 0
+
+        # 계산
+        total_cost = (baemin1 * 0.098) + (2900 * baemin1_c) + (baemin_d * 0.098) + (baemin_p * 0.034) + \
+                     (yogiyo_basic * 0.125) + (yogiyo_light_d * 9.7) + (yogiyo_light_p * 0.077) + (coupang * 0.098)
+
+        # 계산 결과 저장
+        self.OrderIntermediary_result = total_cost
 
     def confirm_order_intermediary(self, instance):
         # 주문 중개 수수료 설정 상태 업데이트

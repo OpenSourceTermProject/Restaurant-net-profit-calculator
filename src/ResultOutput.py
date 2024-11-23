@@ -11,7 +11,7 @@ from kivy.uix.button import Button
 
 # 결과 출력
 class ResultOutput(Widget):
-    def __init__(self, main_layout, input_layout, costInput, fee, insurance, utilityButtons, **kwargs):
+    def __init__(self, main_layout, input_layout, costInput, fee, insurance, utilityButtons,order_intermediary_popup, **kwargs):
         super(ResultOutput, self).__init__(**kwargs)
         self.main_layout = main_layout
         self.input_layout = input_layout
@@ -20,6 +20,7 @@ class ResultOutput(Widget):
         self.insurance = insurance
         self.tax = Tax()  # Tax 객체 생성
         self.utilityButtons = utilityButtons
+        self.order_intermediary_popup = order_intermediary_popup
 
         # 비용 출력 부분
         self.output_layout = GridLayout(cols=3, spacing=10)
@@ -59,23 +60,14 @@ class ResultOutput(Widget):
             # 수도 요금
             water_cost = self.utilityButtons.waterSettingsPopup.water_settings_result 
 
-            # 결제 수수료 계산
+            # 공과금 계산
+            utilities = gas_cost + electricity_cost + water_cost
+            
+            # 결제 수수료 
             payment_processing_fee = self.fee.calculate_payment_processing_fee(sales, rates)
 
-            # 공과금 계산
-            intermediary_fee = 0.05 * sales if self.fee.check_baemin.active else 0
-            intermediary_fee += 0.04 * sales if self.fee.check_yogiyo.active else 0
-            intermediary_fee += 0.03 * sales if self.fee.check_coupangeats.active else 0
-            utilities = gas_cost + electricity_cost + water_cost
-
-            # 주문 중개 수수료 계산
-            intermediary_fee = 0
-            if self.fee.check_baemin.active:
-                intermediary_fee += 0.05 * sales
-            if self.fee.check_yogiyo.active:
-                intermediary_fee += 0.04 * sales
-            if self.fee.check_coupangeats.active:
-                intermediary_fee += 0.03 * sales
+            # 주문 중개 수수료 계산 
+            intermediary_fee = self.order_intermediary_popup.OrderIntermediary_result
 
             insurance_states = self.insurance.insurance_selections  # 상태 가져오기
             insurance = Insurance.calc_insurance(
