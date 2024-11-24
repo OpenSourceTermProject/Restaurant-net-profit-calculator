@@ -1,7 +1,6 @@
 from kivy.uix.widget import Widget
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
-from kivy.uix.checkbox import CheckBox
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.popup import Popup
@@ -13,32 +12,11 @@ class Fee(Widget):
 
         self.main_layout = main_layout
         
-        # 공과금 설정 버튼들을 담을 BoxLayout (가로로 배치)
+        # 주문 수수료 설정 버튼들을 담을 BoxLayout (가로로 배치)
         self.fee_button_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=40, spacing=10)
 
-        # 결제 대행 체크박스 정의
-        self.check_hecto = CheckBox()
-        self.check_toss = CheckBox()
-        self.check_inicis = CheckBox()
-        self.check_KCP = CheckBox()
-        self.check_kakao = CheckBox()
-        self.check_nice = CheckBox()
-
-        # 주문 중개 체크박스 정의
-        self.check_baemin = CheckBox()
-        self.check_yogiyo = CheckBox()
-        self.check_coupangeats = CheckBox()
-
         # 팝업 객체 생성
-        self.paymentProcessingPopup = PaymentProcessingPopup(self)
         self.orderIntermediaryPopup = OrderIntermediaryPopup(self)
-
-        # 결제 대행 버튼
-        payment_processing_button = Button(
-            text="결제 대행 수수료 설정", font_size=15, on_press=self.open_payment_processing_popup, font_name="NanumGothic",
-            size_hint=(None, None), width=200, height=50
-        )
-        self.fee_button_layout.add_widget(payment_processing_button)
 
         # 주문 중개 버튼
         order_intermediary_button = Button(
@@ -49,126 +27,11 @@ class Fee(Widget):
 
         self.main_layout.add_widget(self.fee_button_layout)
 
-    def open_payment_processing_popup(self, instance):
-        self.paymentProcessingPopup.open()
-
     def open_order_intermediary_popup(self, instance):
         self.orderIntermediaryPopup.open()
-
-    # 매출 구간에 따른 수수료율을 반환하는 함수
-    def get_commission_rates(self, sales):
-        if sales <= 300000000:
-            return {
-                'hecto': 0.016, 'toss': 0.019, 'inicis': 0.019,
-                'KCP': 0.0192, 'kakao': 0.017, 'nice': 0.023
-            }
-        elif sales <= 500000000:
-            return {
-                'hecto': 0.022, 'toss': 0.024, 'inicis': 0.025,
-                'KCP': 0.0252, 'kakao': 0.023, 'nice': 0.028
-            }
-        elif sales <= 1000000000:
-            return {
-                'hecto': 0.024, 'toss': 0.025, 'inicis': 0.0256,
-                'KCP': 0.0267, 'kakao': 0.0245, 'nice': 0.029
-            }
-        elif sales <= 3000000000:
-            return {
-                'hecto': 0.026, 'toss': 0.027, 'inicis': 0.029,
-                'KCP': 0.0292, 'kakao': 0.027, 'nice': 0.031
-            }
-        else:
-            return {
-                'hecto': 0.029, 'toss': 0.032, 'inicis': 0.032,
-                'KCP': 0.035, 'kakao': 0.032, 'nice': 0.032
-            }
-
-    # 결제 대행사 수수료 계산 함수
-    def calculate_payment_processing_fee(self, sales, rates):
-        payment_processing_fee = 0
-        if self.check_hecto.active:
-            print("헥토파이낸셜 체크박스 상태: 활성화됨")
-            payment_processing_fee += rates['hecto'] * sales
-        if self.check_toss.active:
-            print("토스페이먼츠 체크박스 상태: 활성화됨")
-            payment_processing_fee += rates['toss'] * sales
-        if self.check_inicis.active:
-            print("이니시스 체크박스 상태: 활성화됨")
-            payment_processing_fee += rates['inicis'] * sales
-        if self.check_KCP.active:
-            print("KCP 체크박스 상태: 활성화됨")
-            payment_processing_fee += rates['KCP'] * sales
-        if self.check_kakao.active:
-            print("카카오페이 체크박스 상태: 활성화됨")
-            payment_processing_fee += rates['kakao'] * sales
-        if self.check_nice.active:
-            print("나이스페이 체크박스 상태: 활성화됨")
-            payment_processing_fee += rates['nice'] * sales
-        return payment_processing_fee
-
-class PaymentProcessingPopup(Popup):
-    def __init__(self, parent_app, **kwargs):
-        super().__init__(**kwargs)
-        self.title = "결제 대행 수수료 설정"
-        self.size_hint = (0.5, 0.8)
-        self.parent_app = parent_app
-        self.title_font = "NanumGothic"
-
-        self.layout = BoxLayout(orientation='vertical', padding=[0, 0, 0, 10], spacing=10)
-
-        # 결제 대행 수수료 설정 체크박스를 항목 이름 오른쪽에 배치
-        intermediary_layout = BoxLayout(orientation='vertical', spacing=10)
-
-        # 각 결제 대행사를 수평으로 나열 (항목 이름 오른쪽에 체크박스)
-        intermediary_layout.add_widget(self.create_item("헥토파이낸셜"))
-        intermediary_layout.add_widget(self.create_item("토스페이먼츠"))
-        intermediary_layout.add_widget(self.create_item("이니시스"))
-        intermediary_layout.add_widget(self.create_item("KCP"))
-        intermediary_layout.add_widget(self.create_item("카카오페이"))
-        intermediary_layout.add_widget(self.create_item("나이스페이"))
-
-        # '결제 대행처' 문구와 레이아웃 추가
-        self.layout.add_widget(Label(text="결제 대행처", font_size=15, halign="center", font_name="NanumGothic"))
-        self.layout.add_widget(intermediary_layout)
-
-        # 확인 버튼
-        confirm_button = Button(
-            text="확인", font_size=15, on_press=self.confirm_payment_processing, font_name="NanumGothic",
-            size_hint=(None, None), width=200, height=50
-        )
-        self.layout.add_widget(confirm_button)
-
-        self.add_widget(self.layout)
-
-    # 항목을 이름과 체크박스로 구성하는 함수
-    def create_item(self, name):
-        item_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=30)
-        label = Label(text=name, font_size=15, font_name="NanumGothic", size_hint_x=None, width=200)
-        checkbox = CheckBox(size_hint_x=None, width=50)
-        item_layout.add_widget(label)
-        item_layout.add_widget(checkbox)
-
-        if name == "헥토파이낸셜":
-            self.parent_app.check_hecto = checkbox
-        elif name == "토스페이먼츠":
-            self.parent_app.check_toss = checkbox
-        elif name == "이니시스":
-            self.parent_app.check_inicis = checkbox
-        elif name == "KCP":
-            self.parent_app.check_KCP = checkbox
-        elif name == "카카오페이":
-            self.parent_app.check_kakao = checkbox
-        elif name == "나이스페이":
-            self.parent_app.check_nice = checkbox
-
-        return item_layout
-
-    def confirm_payment_processing(self, instance):
-        # 결제 대행 수수료 설정 상태 업데이트
-        print("결제 대행 수수료 설정 업데이트")
-        self.dismiss()
-
-
+        
+    def get_commission_rates(self, *args) :
+        return self.orderIntermediaryPopup.OrderIntermediary_result
 
 class OrderIntermediaryPopup(Popup):
     OrderIntermediary_result = 0
@@ -180,75 +43,101 @@ class OrderIntermediaryPopup(Popup):
         self.parent_app = parent_app
         self.title_font = "NanumGothic"
 
-        self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
-
-        self.OrderIntermediary_layout = GridLayout(cols=2, spacing=20)
-
-        self.OrderIntermediary_layout.add_widget(Label(text="배달의 민족 - 배민1 배달 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
-        self.baemin1 = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
-        self.OrderIntermediary_layout.add_widget(self.baemin1)
-
-        self.OrderIntermediary_layout.add_widget(Label(text="배달의 민족 - 배민1 배달 건수", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
-        self.baemin1_c = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
-        self.OrderIntermediary_layout.add_widget(self.baemin1_c)
-
-        self.OrderIntermediary_layout.add_widget(Label(text="배달의 민족 - 가게 배달 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
-        self.baemin_d = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
-        self.OrderIntermediary_layout.add_widget(self.baemin_d)
-
-        self.OrderIntermediary_layout.add_widget(Label(text="배달의 민족 - 포장 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
-        self.baemin_p = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
-        self.OrderIntermediary_layout.add_widget(self.baemin_p)
-
-        self.OrderIntermediary_layout.add_widget(Label(text="요기요 - 베이직 가게배달/요기배달/포장 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
-        self.yogiyo_basic = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
-        self.OrderIntermediary_layout.add_widget(self.yogiyo_basic)
-
-        self.OrderIntermediary_layout.add_widget(Label(text="요기요 - 라이트 가게배달/요기배달 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
-        self.yogiyo_light_d = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
-        self.OrderIntermediary_layout.add_widget(self.yogiyo_light_d)
-
-        self.OrderIntermediary_layout.add_widget(Label(text="요기요 - 라이트 포장 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
-        self.yogiyo_light_p = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
-        self.OrderIntermediary_layout.add_widget(self.yogiyo_light_p)
-
-        self.OrderIntermediary_layout.add_widget(Label(text="쿠팡이츠 - 배달 매출", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
-        self.coupang = TextInput(multiline=False, input_filter='float', font_size=15)  # 숫자 입력 필터
-        self.OrderIntermediary_layout.add_widget(self.coupang)
-
+        # 메인 레이아웃 설정
+        self.layout = BoxLayout(orientation='vertical', padding=20, spacing=20)  # 전체 간격 추가
         self.layout.add_widget(Label(text="주문 중개처", font_size=15, halign="center", font_name="NanumGothic"))
-        self.layout.add_widget(self.OrderIntermediary_layout)
+        
+        ### 배달의 민족 ###
+        p_baemin_layout = GridLayout(cols=2, spacing=10)  # 내부 간격 조정
+            
+        p_baemin_layout.add_widget(Label(text="배달", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.baemin_d = TextInput(multiline=False, input_filter='int', font_size=15, size_hint_y=None, height=25)
+        p_baemin_layout.add_widget(self.baemin_d)
+
+        p_baemin_layout.add_widget(Label(text="포장", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.baemin_p = TextInput(multiline=False, input_filter='int', font_size=15, size_hint_y=None, height=25)
+        p_baemin_layout.add_widget(self.baemin_p)
+        
+        self.layout.add_widget(Label(text="배달의 민족", font_size=15, halign="center", font_name="NanumGothic"))
+        self.layout.add_widget(p_baemin_layout)
+
+        ### 요기요 ###
+        p_yogiyo_layout = GridLayout(cols=2, spacing=10)  
+        
+        p_yogiyo_layout.add_widget(Label(text="요기요 베이직", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.yogiyo_basic = TextInput(multiline=False, input_filter='int', font_size=15, size_hint_y=None, height=25)
+        p_yogiyo_layout.add_widget(self.yogiyo_basic)
+
+        p_yogiyo_layout.add_widget(Label(text="요기요 라이트", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.yogiyo_light = TextInput(multiline=False, input_filter='int', font_size=15, size_hint_y=None, height=25)
+        p_yogiyo_layout.add_widget(self.yogiyo_light)
+
+        p_yogiyo_layout.add_widget(Label(text="포장", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.yogiyo_p = TextInput(multiline=False, input_filter='int', font_size=15, size_hint_y=None, height=25)
+        p_yogiyo_layout.add_widget(self.yogiyo_p)
+        
+        self.layout.add_widget(Label(text="요기요", font_size=15, halign="center", font_name="NanumGothic"))
+        self.layout.add_widget(p_yogiyo_layout)
+
+        ### 쿠팡이츠 ###
+        p_coupang_layout = GridLayout(cols=2, spacing=10) 
+        
+        p_coupang_layout.add_widget(Label(text="배달", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.coupang_d = TextInput(multiline=False, input_filter='int', font_size=15, size_hint_y=None, height=25)
+        p_coupang_layout.add_widget(self.coupang_d)
+        
+        p_coupang_layout.add_widget(Label(text="포장", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.coupang_p = TextInput(multiline=False, input_filter='int', font_size=15, size_hint_y=None, height=25)
+        p_coupang_layout.add_widget(self.coupang_p)
+        
+        self.layout.add_widget(Label(text="쿠팡이츠", font_size=15, halign="center", font_name="NanumGothic"))
+        self.layout.add_widget(p_coupang_layout)
+        
+        ### 배달 횟수 ###
+        p_delivery_layout = GridLayout(cols=2, spacing=10) 
+        
+        p_delivery_layout.add_widget(Label(text="배달 횟수", font_size=15, font_name="NanumGothic", size_hint_y=None, height=25))
+        self.delivery_cnt = TextInput(multiline=False, input_filter='int', font_size=15, size_hint_y=None, height=25)
+        p_delivery_layout.add_widget(self.delivery_cnt)
+
+        self.layout.add_widget(Label(text="배달 횟수", font_size=15, halign="center", font_name="NanumGothic"))
+        self.layout.add_widget(p_delivery_layout)
 
         # 확인 버튼
         confirm_button = Button(
-            text="확인", font_size=15, on_press=self.confirm_order_intermediary, font_name="NanumGothic",
-            size_hint=(None, None), width=200, height=50
+            text="확인", font_size=15, 
+            on_press=self.confirm_order_intermediary,
+            font_name="NanumGothic",
+            size_hint=(None, None), 
+            width=200, height=50
         )
+
+
         self.layout.add_widget(confirm_button)
 
         self.add_widget(self.layout)
 
-        self.OrderIntermediary_result = 0
-
-    def calculate_OrderIntermediary(self, instance):
+    def calculate_OrderIntermediary(self, *args):
         # 값을 가져와 계산
-        baemin1 = float(self.baemin1.text) if self.baemin1.text else 0
-        baemin1_c = float(self.baemin1_c.text) if self.baemin1_c.text else 0
-        baemin_d = float(self.baemin_d.text) if self.baemin_d.text else 0
-        baemin_p = float(self.baemin_p.text) if self.baemin_p.text else 0
-        yogiyo_basic = float(self.yogiyo_basic.text) if self.yogiyo_basic.text else 0
-        yogiyo_light_d = float(self.yogiyo_light_d.text) if self.yogiyo_light_d.text else 0
-        yogiyo_light_p = float(self.yogiyo_light_p.text) if self.yogiyo_light_p.text else 0
-        coupang = float(self.coupang.text) if self.coupang.text else 0
+        baemin_d = int(self.baemin_d.text) if self.baemin_d.text else 0
+        baemin_p = int(self.baemin_p.text) if self.baemin_p.text else 0
+        yogiyo_basic = int(self.yogiyo_basic.text) if self.yogiyo_basic.text else 0
+        yogiyo_light = int(self.yogiyo_light.text) if self.yogiyo_light.text else 0
+        yogiyo_p = int(self.yogiyo_p.text) if self.yogiyo_p.text else 0
+        coupang_d = int(self.coupang_d.text) if self.coupang_d.text else 0
+        delivery_cnt = int(self.delivery_cnt.text) if self.delivery_cnt.text else 0
+        
+        
 
         # 계산
-        total_cost = (baemin1 * 0.098) + (2900 * baemin1_c) + (baemin_d * 0.098) + (baemin_p * 0.034) + \
-                     (yogiyo_basic * 0.125) + (yogiyo_light_d * 9.7) + (yogiyo_light_p * 0.077) + (coupang * 0.098)
+        total_cost = (baemin_d * 0.098) + (baemin_p * 0.034) + (yogiyo_basic * 0.125) \
+                    + (yogiyo_light * 9.7) + (yogiyo_p * 0.077) + (coupang_d * 0.098) + (delivery_cnt * 2900)
 
         # 계산 결과 저장
         self.OrderIntermediary_result = total_cost
 
-    def confirm_order_intermediary(self, instance):
+    def confirm_order_intermediary(self, *args):
         # 주문 중개 수수료 설정 상태 업데이트
-        print("주문 중개 수수료 설정 업데이트")
+        self.calculate_OrderIntermediary()
+        print("주문 중개 수수료 설정 업데이트: " + str(self.OrderIntermediary_result))
         self.dismiss()
