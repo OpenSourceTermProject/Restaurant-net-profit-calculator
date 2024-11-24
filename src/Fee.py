@@ -34,14 +34,14 @@ class Fee(Widget):
         return self.orderIntermediaryPopup.OrderIntermediary_result
 
 class OrderIntermediaryPopup(Popup):
-    OrderIntermediary_result = 0
-    
     def __init__(self, parent_app, **kwargs):
         super().__init__(**kwargs)
         self.title = "주문 중개 수수료 설정"
         self.size_hint = (0.5, 1.0)
         self.parent_app = parent_app
         self.title_font = "NanumGothic"
+
+        self.OrderIntermediary_result = 0
 
         # 메인 레이아웃 설정
         self.layout = BoxLayout(orientation='vertical', padding=20, spacing=20)  # 전체 간격 추가
@@ -112,7 +112,6 @@ class OrderIntermediaryPopup(Popup):
             width=200, height=50
         )
 
-
         self.layout.add_widget(confirm_button)
 
         self.add_widget(self.layout)
@@ -125,9 +124,7 @@ class OrderIntermediaryPopup(Popup):
         yogiyo_light = int(self.yogiyo_light.text) if self.yogiyo_light.text else 0
         yogiyo_p = int(self.yogiyo_p.text) if self.yogiyo_p.text else 0
         coupang_d = int(self.coupang_d.text) if self.coupang_d.text else 0
-        delivery_cnt = int(self.delivery_cnt.text) if self.delivery_cnt.text else 0
-        
-        
+        delivery_cnt = int(self.delivery_cnt.text) if self.delivery_cnt.text else 0    
 
         # 계산
         total_cost = (baemin_d * 0.098) + (baemin_p * 0.034) + (yogiyo_basic * 0.125) \
