@@ -43,9 +43,9 @@ class RootWidget(Widget):
         self.costInput = CostInput(self.main_layout, self.input_layout) # 입력
         self.insuranceSettingsPopUp = InsuranceSettingsPopup(self.main_layout)  # 보험 설정 팝업
         self.fee = Fee(self.main_layout)  # 수수료
-        self.insurance = Insurance(self.main_layout) # 주문 중개
+        self.insurance = Insurance(self.main_layout) # 보험
         self.utilityButtons = UtilityButtons(self.main_layout) # 공과금 버튼
-        self.order_intermediary_popup = OrderIntermediaryPopup(self.main_layout)
+        self.order_intermediary_popup = OrderIntermediaryPopup(self.main_layout) # 주문 중개
         self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee, self.insurance, self.utilityButtons, self.order_intermediary_popup) # 출력
 
 

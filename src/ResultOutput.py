@@ -28,7 +28,6 @@ class ResultOutput(Widget):
         self.insurance_label = self.create_output_row("보험료", self.output_layout)
         self.tax_label = self.create_output_row("세금", self.output_layout)
         self.intermediary_fee_label = self.create_output_row("주문 중개 수수료", self.output_layout)
-        self.payment_processing_fee_label = self.create_output_row("결제 대행 수수료", self.output_layout)
         self.utilities_label = self.create_output_row("공과금", self.output_layout)
         self.expected_net_profit_label = self.create_output_row("예상 순이익", self.output_layout)
 
@@ -79,12 +78,9 @@ class ResultOutput(Widget):
 
             # 공과금 계산
             utilities = gas_cost + electricity_cost + water_cost
-            
-            # 결제 수수료 
-            payment_processing_fee = self.fee.calculate_payment_processing_fee(sales, rates)
 
             # 주문 중개 수수료 계산 
-            intermediary_fee = self.order_intermediary_popup.OrderIntermediary_result
+            intermediary_fee = rates
 
             insurance_states = self.insurance.insurance_selections  # 상태 가져오기
             insurance = Insurance.calc_insurance(
@@ -97,17 +93,16 @@ class ResultOutput(Widget):
                 insurance_states.get("gas", False),
             )
             
-            tax = self.tax.CalcTax(sales, material_cost + insurance + payment_processing_fee + intermediary_fee)
+            tax = self.tax.CalcTax(sales, material_cost + insurance + intermediary_fee)
 
             # 순이익 계산
             net_profit = sales - (
-                    material_cost + insurance + tax + intermediary_fee + payment_processing_fee)
+                    material_cost + insurance + tax + intermediary_fee)
 
             # 결과 출력
             self.insurance_label.text = f"{insurance:,.0f}"
             self.tax_label.text = f"{tax:,.0f}"
             self.intermediary_fee_label.text = f"{intermediary_fee:,.0f}"
-            self.payment_processing_fee_label.text = f"{payment_processing_fee:,.0f}"
             self.utilities_label.text = f"{utilities:,.0f}"
             self.expected_net_profit_label.text = f"{net_profit:,.0f}"
         except ValueError:
