@@ -127,8 +127,10 @@ class OrderIntermediaryPopup(Popup):
         delivery_cnt = int(self.delivery_cnt.text) if self.delivery_cnt.text else 0    
 
         # 계산
-        total_cost = (baemin_d * 0.098) + (baemin_p * 0.034) + (yogiyo_basic * 0.125) \
-                    + (yogiyo_light * 9.7) + (yogiyo_p * 0.077) + (coupang_d * 0.098) + (delivery_cnt * 2900)
+        total_cost = (baemin_d * 0.098) + (baemin_p * 0.034) + (yogiyo_basic * 0.125) + (yogiyo_light * 0.097) + (yogiyo_p * 0.077) + (coupang_d * 0.098) + (delivery_cnt * 2900)
+        
+        print(f"total_cost : {total_cost}, baemin_d : {baemin_d}, baemin_p : {baemin_p}, yogiyo_basic : {yogiyo_basic}\
+            yogiyo_light : {yogiyo_light}, yogiyo_p : {yogiyo_p}, coupang : {coupang_d}, delivery : {delivery_cnt}")
 
         # 계산 결과 저장
         self.OrderIntermediary_result = total_cost
