@@ -12,14 +12,14 @@ from kivy.uix.boxlayout import BoxLayout  # BoxLayout import 추가
 
 # 결과 출력
 class ResultOutput(Widget):
-    def __init__(self, main_layout, input_layout, costInput, fee, insurance, utilityButtons,order_intermediary_popup, **kwargs):
+    def __init__(self, main_layout, input_layout, costInput, fee, insurance, utilityButtons, order_intermediary_popup, **kwargs):
         super(ResultOutput, self).__init__(**kwargs)
         self.main_layout = main_layout
         self.input_layout = input_layout
         self.costInput = costInput
         self.fee = fee
         self.insurance = insurance
-        self.tax = Tax()  # Tax 객체 생성
+        self.tax = Tax()
         self.utilityButtons = utilityButtons
         self.order_intermediary_popup = order_intermediary_popup
 
@@ -36,9 +36,9 @@ class ResultOutput(Widget):
         # 계산 버튼 추가
         calculate_button = Button(
             text="계산",
-            font_size= 25,  # 글씨 크기 유지
-            size_hint=(0.4, None),  # 가로 길이 줄임 (0.3으로 설정)
-            height= 90,
+            font_size=25,
+            size_hint=(0.4, None),
+            height=90,
             font_name="NanumGothic",
             on_press=self.calculate_net_profit
         )
@@ -46,8 +46,8 @@ class ResultOutput(Widget):
         # 버튼을 가운데 배치하기 위해 BoxLayout 추가
         calculate_button_layout = BoxLayout(
             orientation='horizontal',
-            size_hint=(1, None),  # 전체 레이아웃 크기
-            height = 90
+            size_hint=(1, None),
+            height=90
         )
         calculate_button_layout.add_widget(calculate_button)
 
@@ -67,14 +67,10 @@ class ResultOutput(Widget):
             material_cost = float(self.costInput.material_cost_input.text)
             rates = self.fee.get_commission_rates(sales)
 
-            # 가스 요금
-            gas_cost = self.utilityButtons.gasSettingsPopup.gas_settings_result
-
-            # 전기 요금
-            electricity_cost = self.utilityButtons.electricitySettingsPopup.electric_settings_result
-
-            # 수도 요금
-            water_cost = self.utilityButtons.waterSettingsPopup.water_settings_result 
+            # 각 요금 클래스에서 직접 요금 계산
+            gas_cost = self.utilityButtons.gas_instance.calculate_gas(None)
+            electricity_cost = self.utilityButtons.electricity_instance.calculate_electricity(None)
+            water_cost = self.utilityButtons.water_instance.calculate_water()
 
             # 공과금 계산
             utilities = gas_cost + electricity_cost + water_cost
@@ -82,7 +78,7 @@ class ResultOutput(Widget):
             # 주문 중개 수수료 계산 
             intermediary_fee = rates
 
-            insurance_states = self.insurance.insurance_selections  # 상태 가져오기
+            insurance_states = self.insurance.insurance_selections
             insurance = Insurance.calc_insurance(
                 sales,
                 material_cost,
@@ -96,8 +92,7 @@ class ResultOutput(Widget):
             tax = self.tax.CalcTax(sales, material_cost + insurance + intermediary_fee)
 
             # 순이익 계산
-            net_profit = sales - (
-                    material_cost + insurance + tax + intermediary_fee)
+            net_profit = sales - (material_cost + insurance + tax + intermediary_fee + utilities)
 
             # 결과 출력
             self.insurance_label.text = f"{insurance:,.0f}"

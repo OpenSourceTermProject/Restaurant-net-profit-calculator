@@ -35,6 +35,7 @@ LabelBase.register(name="NanumGothic", fn_regular="NanumGothic-ExtraBold.ttf")
 
 class RootWidget(Widget):
     def __init__(self, **kwargs):
+        super(RootWidget, self).__init__(**kwargs)
         # 주요 레이아웃
         self.main_layout = BoxLayout(orientation='vertical', padding=20, spacing=20)
         self.input_layout = GridLayout(cols=3, spacing=10)
@@ -45,20 +46,15 @@ class RootWidget(Widget):
         self.fee = Fee(self.main_layout)  # 수수료
         self.insurance = Insurance(self.main_layout) # 보험
         self.utilityButtons = UtilityButtons(self.main_layout) # 공과금 버튼
+        self.main_layout.add_widget(self.utilityButtons)  # main_layout에 추가
         self.order_intermediary_popup = OrderIntermediaryPopup(self.main_layout) # 주문 중개
         self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee, self.insurance, self.utilityButtons, self.order_intermediary_popup) # 출력
-
 
 # 이 안에 직접 기능 구현하지 말고 각각 클래스 파일에서 구현한 후, rootWidget에 객체 생성해서 하나씩 붙여주세요.
 class RestaurantCalculatorApp(App):
     # 최종 위젯
-    rootWidget = RootWidget()
-
     def build(self):
-        # 최종 위젯
-        self.rootWidget = RootWidget()
-
-        return self.rootWidget.main_layout # 루트 위젯의 메인 레이아웃 출력
+        return RootWidget().main_layout
 
 if __name__ == "__main__":
     RestaurantCalculatorApp().run()
