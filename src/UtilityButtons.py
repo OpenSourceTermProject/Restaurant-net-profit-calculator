@@ -1,69 +1,37 @@
-from kivy.uix.widget import Widget
-from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
+from kivy.uix.popup import Popup
+from WaterCost import Water
+from GasCost import Gas
+from ElectricityCost import Electricity
 
-from src.ElectricitySettingsPopup import ElectricitySettingsPopup
-from src.GasSettingsPopup import GasSettingsPopup
-from src.WaterSettingsPopup import WaterSettingsPopup
+class UtilityButtons(GridLayout):
+    def __init__(self, **kwargs):
+        super(UtilityButtons, self).__init__(**kwargs)
+        self.cols = 1
+        self.spacing = 10
 
+        # 각 요금 클래스의 인스턴스 생성
+        self.water_instance = Water()
+        self.gas_instance = Gas()
+        self.electricity_instance = Electricity()
 
-class UtilityButtons(Widget):
-    def __init__(self, main_layout, **kwargs):
-        super().__init__(**kwargs)
-        self.main_layout = main_layout
+        # 전기, 가스, 수도 요금 버튼 추가
+        self.add_widget(Button(text="Water", on_release=self.show_water_popup))
+        self.add_widget(Button(text="Gas", on_release=self.show_gas_popup))
+        self.add_widget(Button(text="Electricity", on_release=self.show_electricity_popup))
 
-        # 각 공과금 설정 팝업 객체 할당
-        self.electricitySettingsPopup = ElectricitySettingsPopup(self.main_layout)
-        self.gasSettingsPopup = GasSettingsPopup(self.main_layout)
-        self.waterSettingsPopup = WaterSettingsPopup(self.main_layout)
+    def show_water_popup(self, instance):
+        self.water_instance.create_input_fields()
+        popup = Popup(title='Water Cost', content=self.water_instance.water_layout, size_hint=(None, None), size=(400, 300))
+        popup.open()
 
-        # 공과금 설정 버튼들을 담을 BoxLayout (가로로 배치)
-        utility_button_layout = BoxLayout(
-            orientation='horizontal', 
-            size_hint_y=None, 
-            height=60,  # 버튼 높이를 키움
-            spacing=20,  # 버튼 간격 조정
-            padding=[10, 10, 10, 10]  # 레이아웃 여백 추가
-        )
+    def show_gas_popup(self, instance):
+        self.gas_instance.create_input_fields()
+        popup = Popup(title='Gas Cost', content=self.gas_instance.gas_layout, size_hint=(None, None), size=(400, 300))
+        popup.open()
 
-        # 전기 설정 버튼
-        electricity_button = Button(
-            text="전기 요금 설정", 
-            font_size=18,  # 버튼 글씨 크기 조정
-            size_hint=(0.3, 1),  # 버튼 폭 조정
-            font_name="NanumGothic",
-            on_press=self.open_electricity_popup
-        )
-        utility_button_layout.add_widget(electricity_button)
-
-        # 가스 설정 버튼
-        gas_button = Button(
-            text="가스 요금 설정", 
-            font_size=18, 
-            size_hint=(0.3, 1), 
-            font_name="NanumGothic",
-            on_press=self.open_gas_popup
-        )
-        utility_button_layout.add_widget(gas_button)
-
-        # 수도 설정 버튼
-        water_button = Button(
-            text="수도 요금 설정", 
-            font_size=18, 
-            size_hint=(0.3, 1), 
-            font_name="NanumGothic",
-            on_press=self.open_water_popup
-        )
-        utility_button_layout.add_widget(water_button)
-
-        # 공과금 버튼 레이아웃을 main_layout에 추가
-        self.main_layout.add_widget(utility_button_layout)
-
-    def open_electricity_popup(self, instance):
-        self.electricitySettingsPopup.open()
-
-    def open_gas_popup(self, instance):
-        self.gasSettingsPopup.open()
-
-    def open_water_popup(self, instance):
-        self.waterSettingsPopup.open()
+    def show_electricity_popup(self, instance):
+        self.electricity_instance.create_input_fields()
+        popup = Popup(title='Electricity Cost', content=self.electricity_instance.elec_layout, size_hint=(None, None), size=(400, 300))
+        popup.open()
