@@ -78,9 +78,10 @@ class Insurance(Widget):
 class InsuranceSettingsPopup(Popup):
     def __init__(self, parent_app, **kwargs):
         super().__init__(**kwargs)
-        self.title = "Insurance Settings"
+        self.title = "보험료 세부 설정"
         self.size_hint = (0.5, 0.8)
         self.parent_app = parent_app
+        self.title_font = "NanumGothic"
 
         self.layout = BoxLayout(orientation='vertical', padding=10, spacing=10)
 

@@ -47,5 +47,5 @@ class UtilityButtons(GridLayout):
         utility_layout.add_widget(Label(text="전력", font_size=15, font_name="NanumGothic"))
         utility_layout.add_widget(self.electricity_instance.elec_layout)
 
-        popup = Popup(title='공과금 설정', content=utility_layout, size_hint=(None, None), size=(400, 600))
+        popup = Popup(title='공과금 설정', content=utility_layout, size_hint=(None, None), size=(400, 600), title_font="NanumGothic")
         popup.open()

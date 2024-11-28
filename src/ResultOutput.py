@@ -89,7 +89,7 @@ class ResultOutput(Widget):
                 insurance_states.get("gas", False),
             )
             
-            tax = self.tax.CalcTax(sales, material_cost + insurance + intermediary_fee)
+            tax = self.tax.CalcTax(sales, material_cost + insurance + intermediary_fee + utilities)
 
             # 순이익 계산
             net_profit = sales - (material_cost + insurance + tax + intermediary_fee + utilities)
