@@ -41,14 +41,21 @@ class RootWidget(Widget):
         self.input_layout = GridLayout(cols=3, spacing=10)
 
         # 위젯 객체 생성
-        self.costInput = CostInput(self.main_layout, self.input_layout) # 입력
+        self.costInput = CostInput(self.main_layout, self.input_layout)  # 입력
         self.insuranceSettingsPopUp = InsuranceSettingsPopup(self.main_layout)  # 보험 설정 팝업
         self.fee = Fee(self.main_layout)  # 수수료
-        self.insurance = Insurance(self.main_layout) # 보험
-        self.utilityButtons = UtilityButtons(self.main_layout) # 공과금 버튼
-        self.main_layout.add_widget(self.utilityButtons)  # main_layout에 추가
-        self.order_intermediary_popup = OrderIntermediaryPopup(self.main_layout) # 주문 중개
-        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee, self.insurance, self.utilityButtons, self.order_intermediary_popup) # 출력
+        self.insurance = Insurance(self.main_layout)  # 보험
+        self.order_intermediary_popup = OrderIntermediaryPopup(self.main_layout)  # 주문 중개
+
+        # UtilityButtons 객체 생성
+        self.utilityButtons = UtilityButtons(self.main_layout)  # 공과금 버튼
+
+        # ResultOutput 객체 생성
+        self.resultOutput = ResultOutput(self.main_layout, self.input_layout, self.costInput, self.fee, self.insurance, self.utilityButtons, self.order_intermediary_popup)  # 출력
+
+        # 레이아웃에 추가
+        self.main_layout.add_widget(self.utilityButtons)  # main_layout에 공과금 버튼 추가
+        self.main_layout.add_widget(self.resultOutput)  # resultOutput을 main_layout에 추가
 
 # 이 안에 직접 기능 구현하지 말고 각각 클래스 파일에서 구현한 후, rootWidget에 객체 생성해서 하나씩 붙여주세요.
 class RestaurantCalculatorApp(App):

@@ -1,12 +1,11 @@
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 from kivy.uix.popup import Popup
-from kivy.uix.label import Label  # Label 모듈 추가
+from kivy.uix.label import Label
 
 import sys
 import os
 
-# 현재 파일이 위치한 디렉터리를 sys.path에 추가합니다.
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from WaterCost import Water
@@ -20,12 +19,12 @@ class UtilityButtons(GridLayout):
         self.spacing = 10
         self.main_layout = main_layout
 
-        # 각 요금 클래스의 인스턴스 생성
         self.water_instance = Water()
         self.gas_instance = Gas()
         self.electricity_instance = Electricity()
 
-        # 공과금 버튼 추가
+        self.popup = None  # 클래스 변수로 popup 초기화
+
         utility_button = Button(text="공과금 설정",
                                 on_release=self.show_utility_popup, 
                                 font_name="NanumGothic",
@@ -34,7 +33,6 @@ class UtilityButtons(GridLayout):
         self.add_widget(utility_button)
 
     def show_utility_popup(self, instance):
-        # Water, Gas, Electricity 입력 필드를 포함한 레이아웃 생성
         self.water_instance.create_input_fields()
         self.gas_instance.create_input_fields()
         self.electricity_instance.create_input_fields()
@@ -47,5 +45,25 @@ class UtilityButtons(GridLayout):
         utility_layout.add_widget(Label(text="전력", font_size=15, font_name="NanumGothic"))
         utility_layout.add_widget(self.electricity_instance.elec_layout)
 
-        popup = Popup(title='공과금 설정', content=utility_layout, size_hint=(None, None), size=(400, 600), title_font="NanumGothic")
-        popup.open()
+        calculate_button = Button(text="계산하기",
+                                  on_release=self.calculate_utilities,
+                                  font_name="NanumGothic",
+                                  size_hint=(None, None),
+                                  width=200, height=50)
+        utility_layout.add_widget(calculate_button)
+
+        self.popup = Popup(title='공과금 설정', content=utility_layout, size_hint=(None, None), size=(400, 600), title_font="NanumGothic")
+        self.popup.open()
+
+    def calculate_utilities(self, instance):
+        total_water_cost = self.water_instance.calculate_water()
+        total_gas_cost = self.gas_instance.calculate_gas()
+        total_electricity_cost = self.electricity_instance.calculate_electricity()
+
+        total_cost = total_water_cost + total_gas_cost + total_electricity_cost
+
+        # 팝업 닫기
+        self.popup.dismiss()
+
+        # 계산된 결과 반환
+        return total_cost

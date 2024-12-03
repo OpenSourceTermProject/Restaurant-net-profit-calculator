@@ -15,7 +15,7 @@ class Electricity:
         self.elec_using_input = TextInput(multiline=False, input_filter='float', font_size=15)
         self.elec_layout.add_widget(self.elec_using_input)
 
-    def calculate_electricity(self, instance):
+    def calculate_electricity(self):
         # 값을 가져와 계산
         using_elec = float(self.elec_using_input.text) if self.elec_using_input.text else 0
         

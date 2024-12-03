@@ -35,5 +35,8 @@ class Water:
         else:
             n_water_cost = 0  
                                    
-        self.water_cost = 229070 + p_water_cost + n_water_cost  # 일반용 계량기 구경: 200mm
+        if (p_water_cost == 0 and n_water_cost == 0) :
+            self.water_cost = 0
+        else :
+            self.water_cost = 229070 + p_water_cost + n_water_cost  # 일반용 계량기 구경: 200mm
         return self.water_cost
