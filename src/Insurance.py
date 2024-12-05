@@ -37,33 +37,25 @@ class Insurance(Widget):
     def calc_insurance(year_total_income, necessary_expenses, employment_insurance, industrial_accident_insurance,
                   multi_insurance, disaster_insurance, gas_insurance):
         # 입력값 총매출액(부가세포함) 필요경비(보험제외 재료비, 공과금,배달 수수료 등) 고용보험(True,false) 산재보험(True,false) 의무보험3개(True,false) True,False는 체크표시
-
         m_insurance = 0
         c_insurance = 0
-
         ####################### 4대보험 ########################
         business_income = year_total_income - (year_total_income * 0.1) - necessary_expenses  # 사업소득 총매출 - 부가세 - 필요경비
-
         # 국민연금 사업소득 9%
         pension = business_income * 0.09
-
         # 건강보험 https://www.nhis.or.kr/nhis/minwon/retrieveLocalCalcView.do?toDt=
-        health_insurance = business_income * 0.0709  # + {재산(전월세 등 포함)보험료 부과점수 × 부과점수 당 금액(208.4원)} ######################################################################
-
+        health_insurance = business_income * 0.09  # + {재산(전월세 등 포함)보험료 부과점수 × 부과점수 당 금액(208.4원)} ######################################################################
         # 고용보험 선택(true,false) 사업소득 2.25%
         if employment_insurance:
             e_insurance = business_income * 0.0225
         else:
             e_insurance = 0
-
         # 산재보험 선택(true,false) 사업 소득 0.96%
         if industrial_accident_insurance:
             industrial_insurance = business_income * 0.0096
         else:
             industrial_insurance = 0
-
         m_insurance = pension + e_insurance + industrial_insurance + health_insurance
-
         ####################### 의무보험 ########################
         if multi_insurance:
             c_insurance += 50000
@@ -71,7 +63,6 @@ class Insurance(Widget):
             c_insurance += 20000
         if gas_insurance:
             c_insurance += 20000
-
         return m_insurance + c_insurance
 
 
