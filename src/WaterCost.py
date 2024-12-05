@@ -24,7 +24,16 @@ class Water:
         using_p_water = float(self.p_water_using_input.text) if self.p_water_using_input.text else 0
         using_n_water = float(self.n_water_using_input.text) if self.n_water_using_input.text else 0
         
-        p_water_cost = using_p_water * 160
+        if 1 < using_p_water <= 50:
+            p_water_cost = using_p_water * 620
+        elif 50 < using_p_water <= 100:
+            p_water_cost = (using_p_water-50) * 850 + 31000 # 50 x 620
+        elif using_p_water > 100:
+            p_water_cost = (using_p_water-100) * 1040 + 73500   # 50 x 620 + 50 x 850
+        else:
+            p_water_cost = 0  
+        
+        p_water_cost += using_p_water * 160
         
         if 1 < using_n_water <= 50:
             n_water_cost = using_n_water * 560
